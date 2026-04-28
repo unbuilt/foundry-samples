@@ -166,6 +166,37 @@ azd ai agent monitor
 
 For the full deployment guide, see [Azure AI Foundry hosted agents](https://aka.ms/azdaiagent/docs).
 
+## Using the Agent with Voice Live
+
+Once the agent is deployed to Microsoft Foundry, you can interact with it using voice through the [Azure VoiceLive SDK](https://pypi.org/project/azure-ai-voicelive/). The included [`voicelive_sample.py`](voicelive_sample.py) connects to your deployed agent over a real-time WebSocket session, streaming microphone audio and playing back the agent's spoken responses.
+
+### Prerequisites
+
+- The agent must already be deployed to Microsoft Foundry (see [Deploying the Agent](#deploying-the-agent-to-microsoft-foundry)).
+- An **Azure VoiceLive endpoint** — provision one through the Azure portal or your Foundry project.
+- A working **microphone and speakers** on your machine.
+- **Python 3.10+** with the following packages:
+
+```bash
+pip install azure-ai-voicelive azure-identity pyaudio
+```
+
+> [!NOTE]
+> On Linux, install PortAudio first: `sudo apt-get install -y portaudio19-dev libasound2-dev`
+
+### Running the Voice Live Sample
+
+```bash
+python voicelive_sample.py \
+  --endpoint "wss://<your-voicelive-resource>.azure.com/voice-live/realtime" \
+  --agent-name "<your-agent-name>" \
+  --project-name "<your-foundry-project-name>"
+```
+
+The sample authenticates using `DefaultAzureCredential` — make sure you are logged in (`az login`).
+
+Once connected, speak into your microphone. The agent will respond with synthesized speech. Press **Ctrl+C** to end the session. A conversation log is saved to the `logs/` directory.
+
 ## Troubleshooting
 
 ### Images built on Apple Silicon or other ARM64 machines do not work on our service
